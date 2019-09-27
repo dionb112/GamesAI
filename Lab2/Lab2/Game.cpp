@@ -7,7 +7,7 @@
 
 Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game" },
-	m_exitGame{false} //when true game will exit
+	m_exitGame{false}
 {
 	setupFontAndText(); // load font 
 	setupSprite(); // load texture
@@ -95,7 +95,7 @@ void Game::update(float t_deltaTime)
 	else 
 	{
 		m_player.update(t_deltaTime);
-		m_NPC1.update(t_deltaTime);
+		m_wanderer.update(t_deltaTime);
 	}
 }
 /// <summary>
@@ -106,7 +106,7 @@ void Game::render()
 	m_window.clear(sf::Color{ FORTY_TWO, FORTY_TWO, FORTY_TWO });
 	m_window.draw(m_welcomeMessage);
 	m_player.render(m_window);
-	m_NPC1.render(m_window);
+	m_wanderer.render(m_window);
 	m_window.display();
 }
 /// <summary>
@@ -134,5 +134,7 @@ void Game::setupFontAndText()
 void Game::setupSprite()
 {
 	m_player.setupSprite();
-	m_NPC1.setupSprite();
+	m_wanderer.setupBehaviourAndSprite(Type::wander);
+	m_seeker.setupBehaviourAndSprite(Type::seek);
+	m_scaredyCat.setupBehaviourAndSprite(Type::flee);
 }

@@ -8,6 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include "Player.h"
 #include "NPC.h"
+
 class Game
 {
 public:
@@ -18,7 +19,9 @@ private:
 	const unsigned int SCR_W = 1920.0f;
 	const unsigned int SCR_H = 1080.0f;
 	Player m_player;
-	NPC m_NPC1;
+	NPC m_wanderer;
+	NPC m_seeker;
+	NPC m_scaredyCat;
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
 	sf::Text m_welcomeMessage; // text used for message on screen
