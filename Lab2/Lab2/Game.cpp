@@ -3,14 +3,13 @@
 /// @date Sep 2019
 /// </summary>
 #include "Game.h"
-#include <iostream>
-
 Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game" },
-	m_exitGame{false}
+	m_exitGame{false} 
 {
-	setupFontAndText(); // load font 
-	setupSprite(); // load texture
+	setupFontAndText(); 
+	setupNPCs(); 
+	setupSprite();
 }
 /// <summary>
 /// update 60 times per second,
@@ -40,8 +39,7 @@ void Game::run()
 /// <summary>
 /// handle user and system events/ input
 /// </summary>
-void Game::processEvents()
-{
+void Game::processEvents() {
 	sf::Event newEvent;
 	while (m_window.pollEvent(newEvent))
 	{
@@ -59,8 +57,7 @@ void Game::processEvents()
 /// deal with key presses from the user
 /// </summary>
 /// <param name="t_event">key press event</param>
-void Game::processKeys(sf::Event t_event)
-{
+void Game::processKeys(sf::Event t_event) {
 	if (sf::Keyboard::Escape == t_event.key.code)
 	{
 		m_exitGame = true;
@@ -86,28 +83,47 @@ void Game::processKeys(sf::Event t_event)
 /// Update the game world
 /// </summary>
 /// <param name="t_deltaTime">time interval per frame</param>
-void Game::update(float t_deltaTime)
-{
+void Game::update(float t_deltaTime) {
 	if (m_exitGame)
 	{
 		m_window.close();
 	}
-	else 
+	else
 	{
 		m_player.update(t_deltaTime);
-		m_wanderer.update(t_deltaTime);
+		for (NPC* npc : m_NPCs) {
+			npc->update(t_deltaTime, m_player.getPosition());
+		}
+		m_wandererText.setPosition(m_NPCs[0]->getPosition().x + 75, m_NPCs[0]->getPosition().y);
 	}
 }
 /// <summary>
 /// draw the frame and then switch buffers
 /// </summary>
-void Game::render()
-{
+void Game::render() {
 	m_window.clear(sf::Color{ FORTY_TWO, FORTY_TWO, FORTY_TWO });
-	m_window.draw(m_welcomeMessage);
+	m_window.draw(m_wandererText);
 	m_player.render(m_window);
-	m_wanderer.render(m_window);
+	for (NPC* npc : m_NPCs) {
+		npc->render(m_window);
+	}
 	m_window.display();
+}
+/// /// <summary>
+/// load the texture and setup the sprite for the logo
+/// </summary>
+void Game::setupSprite() {
+	m_player.setupSprite();
+	m_NPCs[0]->setupBehaviourAndSprite(Type::wander);
+	m_NPCs[1]->setupBehaviourAndSprite(Type::seek);
+	m_NPCs[2]->setupBehaviourAndSprite(Type::flee);
+}
+void Game::setupNPCs()
+{
+	m_NPCs.reserve(3);
+	for (int i = 0; i < m_NPCs.capacity(); i++) {
+		m_NPCs.push_back(new NPC());
+	}
 }
 /// <summary>
 /// load the font and setup the text message for screen
@@ -118,23 +134,11 @@ void Game::setupFontAndText()
 	{
 		std::cout << "problem loading arial black font" << std::endl;
 	}
-	m_welcomeMessage.setFont(m_ArialBlackfont);
-	m_welcomeMessage.setString("Lab2");
-	m_welcomeMessage.setStyle(sf::Text::Underlined | sf::Text::Italic | sf::Text::Bold);
-	m_welcomeMessage.setPosition(40.0f, 40.0f);
-	m_welcomeMessage.setCharacterSize(80U);
-	m_welcomeMessage.setOutlineColor(sf::Color::Red);
-	m_welcomeMessage.setFillColor(sf::Color::Black);
-	m_welcomeMessage.setOutlineThickness(3.0f);
-}
-
-/// <summary>
-/// load the texture and setup the sprite for the logo
-/// </summary>
-void Game::setupSprite()
-{
-	m_player.setupSprite();
-	m_wanderer.setupBehaviourAndSprite(Type::wander);
-	m_seeker.setupBehaviourAndSprite(Type::seek);
-	m_scaredyCat.setupBehaviourAndSprite(Type::flee);
+	m_wandererText.setFont(m_ArialBlackfont);
+	m_wandererText.setString("Wander");
+	m_wandererText.setStyle(sf::Text::Italic);
+	m_wandererText.setCharacterSize(42U);
+	m_wandererText.setOutlineColor(sf::Color::Red);
+	m_wandererText.setFillColor(sf::Color::Black);
+	m_wandererText.setOutlineThickness(3.0f);
 }

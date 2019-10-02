@@ -1,7 +1,6 @@
 #ifndef PLAYER_HPP
 #define PLAYER_HPP
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "Kinematic.h"
 class Player
 {
@@ -14,6 +13,7 @@ public:
 	void update(float t_deltaTime);
 	void render(sf::RenderWindow & t_window);
 	void setupSprite();
+	sf::Vector2f getPosition() { return m_position; }
 private:
 	void direct();
 	void screenWrap();

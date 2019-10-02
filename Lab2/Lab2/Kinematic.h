@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include <cmath>
 const static float PI = 3.14159265359;
 const static float ONE_RAD = 180 / PI;

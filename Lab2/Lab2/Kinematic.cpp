@@ -4,7 +4,7 @@ float Kinematic::getNewOrientation(float t_orientation, sf::Vector2f t_velocity,
 {
 	if (vectorLength(t_velocity) > 0)
 	{
-		return toDegrees(atan2(-t_position.x, t_position.y));
+		return toDegrees(atan2(-t_velocity.x, t_velocity.y));
 	}
 	else
 	{

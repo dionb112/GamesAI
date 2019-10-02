@@ -1,7 +1,6 @@
 #ifndef NPC_HPP
 #define NPC_HPP
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include "Kinematic.h"
 #include <cstdlib>    
 #include <ctime>   
@@ -11,25 +10,27 @@ enum Type
 	seek, 
 	flee
 };
+static const float MAX_VELOCITY = 0.5f;
+static const float MIN_VELOCITY = 0.05f;
+static const float ROTATION_CHANGE = 6.0f;
 class NPC
 {
 public:
 	NPC();
-	void kinematicFlee();
-	void kinematicSeek();
+	void kinematicFlee(float t_deltaTime, sf::Vector2f& t_playerPos);
+	void kinematicSeek(float t_deltaTime, sf::Vector2f& t_playerPos);
 	void kinematicArrive();
-	void kinematicWanderer();
-	void update(float t_deltaTime);
+	void kinematicWanderer(float t_deltaTime);
+	void update(float t_deltaTime, sf::Vector2f& t_playerPos);
 	void render(sf::RenderWindow& t_window);
 	void setupBehaviourAndSprite(Type t_type);
+	sf::Vector2f getPosition() { return m_myPosition; }
 private:
 	Type m_behaviourType;
-	void generateTarget();
-	void screenWrap();
-	void move();
-	const float MAX_VELOCITY = 0.5f;
-	const float MIN_VELOCITY = 0.05f;
-	const float ROTATION_CHANGE = 6.0f;
+	void m_generateTarget();
+	void m_screenWrap();
+	void m_move();
+
 	const unsigned int SCR_W = 1920;
 	const unsigned int SCR_H = 1080;
 	sf::Texture m_spriteTexture;
