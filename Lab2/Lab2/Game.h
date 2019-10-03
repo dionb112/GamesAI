@@ -20,9 +20,9 @@ private:
 	const unsigned int SCR_H = 1080.0f;
 	Player m_player;
 	std::vector<NPC *> m_NPCs;
+	std::vector<sf::Text *> m_NPCTexts; // text used for message on screen
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
-	sf::Text m_wandererText; // text used for message on screen
 	bool m_exitGame; // control exiting game
 	void processEvents();
 	void processKeys(sf::Event t_event);

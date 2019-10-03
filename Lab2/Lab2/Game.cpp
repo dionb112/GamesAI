@@ -7,9 +7,9 @@ Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game" },
 	m_exitGame{false} 
 {
+	setupNPCs();
 	setupFontAndText(); 
-	setupNPCs(); 
-	setupSprite();
+	setupSprite(); 
 }
 /// <summary>
 /// update 60 times per second,
@@ -84,17 +84,14 @@ void Game::processKeys(sf::Event t_event) {
 /// </summary>
 /// <param name="t_deltaTime">time interval per frame</param>
 void Game::update(float t_deltaTime) {
-	if (m_exitGame)
-	{
+	if (m_exitGame) {
 		m_window.close();
-	}
-	else
-	{
+	} else {
 		m_player.update(t_deltaTime);
-		for (NPC* npc : m_NPCs) {
-			npc->update(t_deltaTime, m_player.getPosition());
+		for (int i = 0; i < m_NPCs.size(); i++) {
+			m_NPCs[i]->update(t_deltaTime, m_player.getPosition());
+			m_NPCTexts[i]->setPosition(m_NPCs[i]->getPosition().x + 75, m_NPCs[i]->getPosition().y);
 		}
-		m_wandererText.setPosition(m_NPCs[0]->getPosition().x + 75, m_NPCs[0]->getPosition().y);
 	}
 }
 /// <summary>
@@ -102,7 +99,9 @@ void Game::update(float t_deltaTime) {
 /// </summary>
 void Game::render() {
 	m_window.clear(sf::Color{ FORTY_TWO, FORTY_TWO, FORTY_TWO });
-	m_window.draw(m_wandererText);
+	for (sf::Text* text : m_NPCTexts) {
+		m_window.draw(*text);
+	}
 	m_player.render(m_window);
 	for (NPC* npc : m_NPCs) {
 		npc->render(m_window);
@@ -121,8 +120,10 @@ void Game::setupSprite() {
 void Game::setupNPCs()
 {
 	m_NPCs.reserve(3);
+	m_NPCTexts.reserve(m_NPCs.capacity());
 	for (int i = 0; i < m_NPCs.capacity(); i++) {
 		m_NPCs.push_back(new NPC());
+		m_NPCTexts.push_back(new sf::Text());
 	}
 }
 /// <summary>
@@ -134,11 +135,15 @@ void Game::setupFontAndText()
 	{
 		std::cout << "problem loading arial black font" << std::endl;
 	}
-	m_wandererText.setFont(m_ArialBlackfont);
-	m_wandererText.setString("Wander");
-	m_wandererText.setStyle(sf::Text::Italic);
-	m_wandererText.setCharacterSize(42U);
-	m_wandererText.setOutlineColor(sf::Color::Red);
-	m_wandererText.setFillColor(sf::Color::Black);
-	m_wandererText.setOutlineThickness(3.0f);
+	for (sf::Text* text : m_NPCTexts) {
+		text->setFont(m_ArialBlackfont);
+		text->setStyle(sf::Text::Italic);
+		text->setCharacterSize(42U);
+		text->setOutlineColor(sf::Color::Red);
+		text->setFillColor(sf::Color::Black);
+		text->setOutlineThickness(3.0f);
+	}
+	m_NPCTexts[0]->setString("Wander");
+	m_NPCTexts[1]->setString("Seek");
+	m_NPCTexts[2]->setString("Flee");
 }
