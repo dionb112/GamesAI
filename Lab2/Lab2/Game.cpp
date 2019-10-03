@@ -89,7 +89,7 @@ void Game::update(float t_deltaTime) {
 	} else {
 		m_player.update(t_deltaTime);
 		for (int i = 0; i < m_NPCs.size(); i++) {
-			m_NPCs[i]->update(t_deltaTime, m_player.getPosition());
+			m_NPCs[i]->update(t_deltaTime, m_player.getPosition(), m_player.getVelocity());
 			m_NPCTexts[i]->setPosition(m_NPCs[i]->getPosition().x + 75, m_NPCs[i]->getPosition().y);
 		}
 	}
@@ -116,10 +116,11 @@ void Game::setupSprite() {
 	m_NPCs[0]->setupBehaviourAndSprite(Type::wander);
 	m_NPCs[1]->setupBehaviourAndSprite(Type::seek);
 	m_NPCs[2]->setupBehaviourAndSprite(Type::flee);
+	m_NPCs[3]->setupBehaviourAndSprite(Type::pursue);
 }
 void Game::setupNPCs()
 {
-	m_NPCs.reserve(3);
+	m_NPCs.reserve(4);
 	m_NPCTexts.reserve(m_NPCs.capacity());
 	for (int i = 0; i < m_NPCs.capacity(); i++) {
 		m_NPCs.push_back(new NPC());
@@ -146,4 +147,5 @@ void Game::setupFontAndText()
 	m_NPCTexts[0]->setString("Wander");
 	m_NPCTexts[1]->setString("Seek");
 	m_NPCTexts[2]->setString("Flee");
+	m_NPCTexts[3]->setString("Pursue");
 }

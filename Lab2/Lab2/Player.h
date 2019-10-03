@@ -14,6 +14,7 @@ public:
 	void render(sf::RenderWindow & t_window);
 	void setupSprite();
 	sf::Vector2f getPosition() { return m_position; }
+	sf::Vector2f getVelocity() { return m_velocity; }
 private:
 	void direct();
 	void screenWrap();

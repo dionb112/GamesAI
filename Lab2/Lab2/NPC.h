@@ -8,7 +8,8 @@ enum Type
 { 
 	wander, 
 	seek, 
-	flee
+	flee,
+	pursue
 };
 static const float MAX_VELOCITY = 0.5f;
 static const float MIN_VELOCITY = 0.05f;
@@ -17,11 +18,12 @@ class NPC
 {
 public:
 	NPC();
-	void kinematicFlee(float t_deltaTime, sf::Vector2f& t_playerPos);
+	void kinematicWander(float t_deltaTime);
 	void kinematicSeek(float t_deltaTime, sf::Vector2f& t_playerPos);
+	void kinematicFlee(float t_deltaTime, sf::Vector2f& t_playerPos);
 	void kinematicArrive();
-	void kinematicWanderer(float t_deltaTime);
-	void update(float t_deltaTime, sf::Vector2f& t_playerPos);
+	void dynamicPursue(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo);
+	void update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo);
 	void render(sf::RenderWindow& t_window);
 	void setupBehaviourAndSprite(Type t_type);
 	sf::Vector2f getPosition() { return m_myPosition; }
