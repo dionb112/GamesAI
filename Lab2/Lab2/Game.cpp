@@ -7,7 +7,7 @@ Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game" },
 	m_exitGame{false} 
 {
-	setupNPCs();
+	setupNPCs(); 
 	setupFontAndText(); 
 	setupSprite(); 
 }

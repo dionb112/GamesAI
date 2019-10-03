@@ -9,6 +9,11 @@ NPC::NPC() :
 	m_generateTarget();
 }
 void NPC::kinematicFlee(float t_deltaTime, sf::Vector2f& t_playerPos) {
+	m_targetPosition = t_playerPos;
+	m_velocity = m_myPosition - m_targetPosition;
+	m_velocity = m_velocity / Kinematic::vectorLength(m_velocity) * (t_deltaTime / 4);
+	m_velocity *= MAX_VELOCITY;
+	m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity);
 }
 void NPC::update(float t_deltaTime, sf::Vector2f& t_playerPos) {
 	switch (m_behaviourType)
@@ -57,9 +62,10 @@ void NPC::kinematicSeek(float t_deltaTime, sf::Vector2f& t_playerPos) {
 	m_velocity = m_targetPosition - m_myPosition;
 	m_velocity = m_velocity / Kinematic::vectorLength(m_velocity) * t_deltaTime;
 	m_velocity *= MAX_VELOCITY;
-	m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity, m_myPosition);
+	m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity);
 }
 void NPC::kinematicArrive() {
+
 }
 void NPC::m_generateTarget() {
 	float x = rand() % 2000;
@@ -71,7 +77,7 @@ void NPC::kinematicWanderer(float t_deltaTime) {
 	{
 		m_generateTarget();
 	}
-	m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity, m_myPosition);
+	m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity);
 	m_orientation = m_orientation + ROTATION_CHANGE * ((rand() % 2) - 1); // rand 0 to 2 minus 1 gives -1 to 1 
 	m_velocity = sf::Vector2f{ -sinf(m_orientation), cosf(m_orientation) } * MAX_VELOCITY ;
 	m_velocity = m_targetPosition - m_myPosition;

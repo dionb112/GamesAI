@@ -1,6 +1,6 @@
 #include "Kinematic.h"
 
-float Kinematic::getNewOrientation(float t_orientation, sf::Vector2f t_velocity, sf::Vector2f t_position)
+float Kinematic::getNewOrientation(float t_orientation, sf::Vector2f t_velocity)
 {
 	if (vectorLength(t_velocity) > 0)
 	{
