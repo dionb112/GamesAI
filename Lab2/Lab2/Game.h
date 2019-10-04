@@ -15,6 +15,8 @@ public:
 	Game();
 	void run();
 private:
+	bool m_turningRight;
+	bool m_turningLeft;
 	const sf::Uint8 FORTY_TWO = 4.2f;
 	Player m_player;
 	std::vector<NPC *> m_NPCs;

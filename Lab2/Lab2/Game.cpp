@@ -4,8 +4,10 @@
 /// </summary>
 #include "Game.h"
 Game::Game() :
-	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game", sf::Style::Fullscreen },
-	m_exitGame{false} 
+	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game" },//, sf::Style::Fullscreen },
+	m_exitGame{false},
+	m_turningRight{false},
+	m_turningLeft{false}
 {
 	m_window.setVerticalSyncEnabled(1);
 	setupNPCs(); 
@@ -48,7 +50,7 @@ void Game::processEvents() {
 		{
 			m_exitGame = true;
 		}
-		if (sf::Event::KeyPressed == newEvent.type) //user pressed a key
+		if (sf::Event::KeyPressed == newEvent.type || sf::Event::KeyReleased == newEvent.type) //user pressed a key
 		{
 			processKeys(newEvent);
 		}
@@ -59,25 +61,41 @@ void Game::processEvents() {
 /// </summary>
 /// <param name="t_event">key press event</param>
 void Game::processKeys(sf::Event t_event) {
-	if (sf::Keyboard::Escape == t_event.key.code)
-	{
+
+	if (sf::Keyboard::Escape == t_event.key.code) {
 		m_exitGame = true;
 	}
 	if (sf::Keyboard::Right == t_event.key.code)
 	{
 		m_player.right();
+		m_turningRight = true;
 	}
-	else if (sf::Keyboard::Left == t_event.key.code)
+	if (sf::Keyboard::Left == t_event.key.code)
 	{
 		m_player.left();
+		m_turningLeft = true;
 	}
-	if (sf::Keyboard::Up == t_event.key.code)
+	if (sf::Keyboard::Up == t_event.key.code && !m_turningLeft && !m_turningRight)
 	{
 		m_player.up();
 	}
-	else if (sf::Keyboard::Down == t_event.key.code)
+	if (sf::Keyboard::Down == t_event.key.code)
 	{
 		m_player.down();
+	}
+	if (sf::Event::KeyReleased == t_event.type)
+	{
+		switch (t_event.key.code)
+		{
+		case sf::Keyboard::Right:
+			m_turningRight = false;
+			break;
+		case sf::Keyboard::Left:
+			m_turningLeft = false;
+			break;
+		default:
+			break;
+		}
 	}
 }
 /// <summary>
