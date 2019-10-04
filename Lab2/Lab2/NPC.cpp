@@ -11,11 +11,12 @@ NPC::NPC() :
 void NPC::kinematicFlee(float t_deltaTime, sf::Vector2f& t_playerPos) {
 	m_targetPosition = t_playerPos;
 	m_velocity = m_myPosition - m_targetPosition;
-	m_velocity = m_velocity / Kinematic::vectorLength(m_velocity) * (t_deltaTime / 4);
+	m_velocity = m_velocity / Kinematic::vectorLength(m_velocity) * (t_deltaTime / 3);
 	m_velocity *= MAX_VELOCITY;
 	m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity);
 }
 void NPC::update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo) {
+	bool isFlee = false;
 	switch (m_behaviourType)
 	{
 	case wander:
@@ -26,6 +27,7 @@ void NPC::update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_p
 		break;
 	case flee:
 		kinematicFlee(t_deltaTime / 4.2f, t_playerPos);
+		isFlee = true;
 		break;
 	case pursue:
 		dynamicPursue(t_deltaTime / 4.2f, t_playerPos, t_playerVelo);
@@ -34,31 +36,15 @@ void NPC::update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_p
 		break;
 	}
 	m_move();
-	m_screenWrap();
+	if (!isFlee) {
+		Kinematic::screenWrap(m_myPosition);
+	}
 }
 void NPC::m_move()
 {
 	m_myPosition += m_velocity;
 	m_sprite.setRotation(m_orientation);
 	m_sprite.setPosition(m_myPosition);
-}
-void NPC::m_screenWrap() {
-	if (m_myPosition.x < 0)
-	{
-		m_generateTarget();
-	}
-	if (m_myPosition.x > SCR_W)
-	{
-		m_generateTarget();
-	}
-	if (m_myPosition.y < 0)
-	{
-		m_generateTarget();
-	}
-	if (m_myPosition.y > SCR_H)
-	{
-		m_generateTarget();
-	}
 }
 void NPC::kinematicSeek(float t_deltaTime, sf::Vector2f& t_playerPos) {
 	m_targetPosition = t_playerPos;
@@ -71,8 +57,8 @@ void NPC::kinematicArrive() {
 
 }
 void NPC::m_generateTarget() {
-	float x = rand() % 2000;
-	float y = rand() % 1200;
+	float x = rand() % SCR_W;
+	float y = rand() % SCR_H;
 	m_targetPosition = sf::Vector2f{ x, y };
 }
 void NPC::kinematicWander(float t_deltaTime) {
@@ -91,8 +77,8 @@ void NPC::dynamicPursue(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector
 	sf::Vector2f direction = t_playerPos - m_myPosition;	//direction = target.position - my.position
 	float distance = Kinematic::vectorLength(direction);	//	distance = direction.length
 	float speed = Kinematic::vectorLength(m_velocity);		//	speed = my.velocity.length
-	if (speed <= distance / 1000) { //	if speed <= distance / maxTimePrediction:
-		timePrediction = 1000;	//timePrediction = maxTimeprediction
+	if (speed <= distance / MAX_TIME_PRED) { //	if speed <= distance / maxTimePrediction:
+		timePrediction = MAX_TIME_PRED;	//timePrediction = maxTimeprediction
 		}
 	else {
 		timePrediction = distance / speed;	//timePrediction = distance / speed

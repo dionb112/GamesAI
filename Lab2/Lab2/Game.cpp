@@ -4,9 +4,10 @@
 /// </summary>
 #include "Game.h"
 Game::Game() :
-	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game" },
+	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game", sf::Style::Fullscreen },
 	m_exitGame{false} 
 {
+	m_window.setVerticalSyncEnabled(1);
 	setupNPCs(); 
 	setupFontAndText(); 
 	setupSprite(); 

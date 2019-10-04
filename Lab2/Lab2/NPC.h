@@ -11,9 +11,6 @@ enum Type
 	flee,
 	pursue
 };
-static const float MAX_VELOCITY = 0.5f;
-static const float MIN_VELOCITY = 0.05f;
-static const float ROTATION_CHANGE = 6.0f;
 class NPC
 {
 public:
@@ -28,13 +25,10 @@ public:
 	void setupBehaviourAndSprite(Type t_type);
 	sf::Vector2f getPosition() { return m_myPosition; }
 private:
+	const short MAX_TIME_PRED = 1000; // ms
 	Type m_behaviourType;
 	void m_generateTarget();
-	void m_screenWrap();
 	void m_move();
-
-	const unsigned int SCR_W = 1920;
-	const unsigned int SCR_H = 1080;
 	sf::Texture m_spriteTexture;
 	sf::Sprite m_sprite;
 	sf::Vector2f m_velocity;

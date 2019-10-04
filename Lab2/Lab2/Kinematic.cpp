@@ -21,3 +21,24 @@ float Kinematic::toDegrees(float t_rads)
 {
 	return t_rads * PI / 180;
 }
+
+void Kinematic::screenWrap(sf::Vector2f& t_position)
+{
+	
+	if (t_position.x < 0 - SPRITE_QUARTER)
+	{
+		t_position = sf::Vector2f(SCR_W + SPRITE_QUARTER, t_position.y);
+	}
+	if (t_position.x > SCR_W + SPRITE_QUARTER)
+	{
+		t_position = sf::Vector2f(0 - SPRITE_QUARTER, t_position.y);
+	}
+	if (t_position.y < 0 - SPRITE_QUARTER)
+	{
+		t_position = sf::Vector2f(t_position.x, SCR_H + SPRITE_QUARTER);
+	}
+	if (t_position.y > SCR_H + SPRITE_QUARTER)
+	{
+		t_position = sf::Vector2f(t_position.x, 0 - SPRITE_QUARTER);
+	}
+}

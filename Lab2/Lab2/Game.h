@@ -16,8 +16,6 @@ public:
 	void run();
 private:
 	const sf::Uint8 FORTY_TWO = 4.2f;
-	const unsigned int SCR_W = 1920.0f;
-	const unsigned int SCR_H = 1080.0f;
 	Player m_player;
 	std::vector<NPC *> m_NPCs;
 	std::vector<sf::Text *> m_NPCTexts; // text used for message on screen

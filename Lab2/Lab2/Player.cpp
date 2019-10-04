@@ -67,26 +67,7 @@ void Player::update(float t_deltaTime)
 		m_velocity.y = MAX_VELOCITY;
 	}
 	move(t_deltaTime);
-	screenWrap();
-}
-void Player::screenWrap()
-{
-	if (m_position.x < 0)
-	{
-		m_position = sf::Vector2f(SCR_W, m_position.y);
-	}
-	if (m_position.x > SCR_W)
-	{
-		m_position = sf::Vector2f(0, m_position.y);
-	}
-	if (m_position.y < 0)
-	{
-		m_position = sf::Vector2f(m_position.y, SCR_H);
-	}
-	if (m_position.y > SCR_H)
-	{
-		m_position = sf::Vector2f(m_position.y, 0);
-	}
+	Kinematic::screenWrap(m_position);
 }
 void Player::move(float t_deltaTime)
 {
