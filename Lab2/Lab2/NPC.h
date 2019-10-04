@@ -8,8 +8,9 @@ enum Type
 { 
 	wander, 
 	seek, 
+	arrive,
 	flee,
-	pursue
+	pursue,
 };
 class NPC
 {
@@ -18,8 +19,10 @@ public:
 	void kinematicWander(float t_deltaTime);
 	void kinematicSeek(float t_deltaTime, sf::Vector2f& t_playerPos);
 	void kinematicFlee(float t_deltaTime, sf::Vector2f& t_playerPos);
-	void kinematicArrive();
+	void kinematicArrive(float t_deltaTime, sf::Vector2f& t_playerPos);
 	void dynamicPursue(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo);
+	void closestApproach();
+
 	void update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo);
 	void render(sf::RenderWindow& t_window);
 	void setupBehaviourAndSprite(Type t_type);

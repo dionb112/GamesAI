@@ -1,4 +1,4 @@
-#include "NPC.h"
+﻿#include "NPC.h"
 NPC::NPC() :
 	m_velocity{ -MAX_VELOCITY, 0.0f },
 	m_myPosition{ SCR_W / 2, SCR_H / 2 },
@@ -24,6 +24,9 @@ void NPC::update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_p
 		break;
 	case seek:
 		kinematicSeek(t_deltaTime / 4.2f, t_playerPos);
+		break;
+	case arrive:
+		kinematicArrive(t_deltaTime / 4.2f, t_playerPos);
 		break;
 	case flee:
 		kinematicFlee(t_deltaTime / 4.2f, t_playerPos);
@@ -53,8 +56,22 @@ void NPC::kinematicSeek(float t_deltaTime, sf::Vector2f& t_playerPos) {
 	m_velocity *= MAX_VELOCITY;
 	m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity);
 }
-void NPC::kinematicArrive() {
-
+void NPC::kinematicArrive(float t_deltaTime, sf::Vector2f& t_playerPos) {
+	float timeToTarget = 0.25f;
+	float radius = SPRITE_QUARTER;
+	m_targetPosition = t_playerPos;
+	m_velocity = m_targetPosition - m_myPosition;
+	if (Kinematic::vectorLength(m_velocity) < radius) {
+		m_velocity.x = 0;
+		m_velocity.y = 0;
+	} else {
+		m_velocity = m_velocity / timeToTarget * t_deltaTime;
+		if (Kinematic::vectorLength(m_velocity)) {
+			m_velocity = m_velocity / Kinematic::vectorLength(m_velocity);
+			m_velocity = m_velocity * MAX_VELOCITY;
+		}
+		m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity);
+	}
 }
 void NPC::m_generateTarget() {
 	float x = rand() % SCR_W;
@@ -86,6 +103,35 @@ void NPC::dynamicPursue(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector
 	sf::Vector2f newTarget = t_playerPos + t_playerVelo * timePrediction * t_deltaTime;	//	newtarget.position = target.position + target.velocity * timePrediction
 	kinematicSeek(t_deltaTime, newTarget); //	seek(me, newTarget)
 }
+void NPC::closestApproach() {
+	float shortestTime = INFINITY;		//	shortestTime = infinity​
+		//		firstTarget = None // target that will collide first​
+		//		firstMinSeparation, firstDistance, firstRelativePos, firstRelativeVel​
+		//		radius //collision radius​
+		//		for target in targets : ​
+		//			relativePos = target.position - character.position​
+		//			relativeVel = target.velocity - character.velocity​
+		//			relativeSpeed = relativeVel.length()​
+		//			timeToCollision = (relativePos.relativeVel) / (relativeSpeed * relativeSpeed)​
+		//			distance = relativePos.length()​
+		//			minSeparation = distance – relativeSpeed * shortestTime​
+		//			if minSeparation > 2 * radius: continue​
+		//				if timeToCollision > 0 and timeToCollision < shortestTime: //Is it the shortest?​
+		//	shortestTime = timeToCollision​
+		//		firstTarget = target​
+		//		firstMinSeparation = minSeparation​
+		//		firstDistance = distance​
+		//		firstRelativePos = relativePos​
+		//		firstRelativeVel = relativeVel​
+		//		if not firstTarget: return None​
+		//			if firstMinSeparation <= 0 or distance < 2 * radius : # colliding​
+		//				relativePos = firstTarget.position - character.position​
+		//			else:​
+		//				relativePos = firstRelativePos + firstRelativeVel * shortestTime​
+		//				relativePos.normalize()​
+		//				steering.linear = relativePos * maxAcceleration​
+		//				return steering​
+}
 void NPC::render(sf::RenderWindow& t_window) {
 	t_window.draw(m_sprite);
 }
@@ -107,6 +153,12 @@ void NPC::setupBehaviourAndSprite(Type t_type) {
 		if (!m_spriteTexture.loadFromFile("ASSETS\\IMAGES\\seeker.png"))
 		{
 			std::cout << "problem loading seeker" << std::endl;
+		}
+		break;
+	case arrive:
+		if (!m_spriteTexture.loadFromFile("ASSETS\\IMAGES\\arriver.png"))
+		{
+			std::cout << "problem loading arriver" << std::endl;
 		}
 		break;
 	case flee:

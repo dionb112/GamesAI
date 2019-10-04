@@ -136,10 +136,12 @@ void Game::setupSprite() {
 	m_NPCs[1]->setupBehaviourAndSprite(Type::seek);
 	m_NPCs[2]->setupBehaviourAndSprite(Type::flee);
 	m_NPCs[3]->setupBehaviourAndSprite(Type::pursue);
+	m_NPCs[4]->setupBehaviourAndSprite(Type::arrive);
+
 }
 void Game::setupNPCs()
 {
-	m_NPCs.reserve(4);
+	m_NPCs.reserve(5);
 	m_NPCTexts.reserve(m_NPCs.capacity());
 	for (int i = 0; i < m_NPCs.capacity(); i++) {
 		m_NPCs.push_back(new NPC());
@@ -167,4 +169,5 @@ void Game::setupFontAndText()
 	m_NPCTexts[1]->setString("Seek");
 	m_NPCTexts[2]->setString("Flee");
 	m_NPCTexts[3]->setString("Pursue");
+	m_NPCTexts[4]->setString("Arrive");
 }
