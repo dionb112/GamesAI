@@ -1,8 +1,6 @@
 #include "Game.h"
 #include <iostream>
 using namespace std;
-
-
 /// <summary>
 /// default constructor
 /// setup the window properties
@@ -16,7 +14,6 @@ Game::Game()
 {
 	window_height = desktop.height;
 	window_width = desktop.width;
-
 	//Having the style of "None" gives a false-fullscreen effect for easier closing and access.
 	m_window.create(sf::VideoMode(window_width - 100, window_height - 100, desktop.bitsPerPixel), "Flocking", sf::Style::None);
 	m_window.setVerticalSyncEnabled(true);
@@ -34,7 +31,7 @@ Game::Game()
 		std::cout << "successfully loaded ariblk.ttf font file" << std::endl;
 
 
-	for (int i = 0; i < 125; i++) //Number of boids is hardcoded for testing pusposes.
+	for (int i = 0; i < 150; i++) //Number of boids is hardcoded for testing pusposes.
 	{
 		//Boid b(rand() % window_width, rand() % window_height); //Starts the boid with a random position in the window.
 		Boid b(window_width / 3, window_height / 3); //Starts all boids in the center of the screen
@@ -55,7 +52,6 @@ Game::Game()
 	}
 
 }
-
 /// <summary>
 /// default destructor we didn't dynamically allocate anything
 /// so we don't need to free it, but method needs to be here
@@ -63,8 +59,6 @@ Game::Game()
 Game::~Game()
 {
 }
-
-
 /// <summary>
 /// main game loop
 /// update 60 times per second,
@@ -115,8 +109,6 @@ void Game::processEvents()
 		}
 	}
 }
-
-
 /// <summary>
 /// deal with key presses from the user
 /// </summary>
@@ -132,9 +124,7 @@ void Game::processKeys(sf::Event t_event)
 			action = "swarm";
 		else
 			action = "flock";
-
 }
-
 /// <summary>
 /// deal with mouse button presses from the user
 /// </summary>
@@ -161,9 +151,7 @@ void Game::processMouse(sf::Event t_event)
 		shapes.push_back(shape);
 		// New Shape is drawn on next render loop
 	}
-
 }
-
 /// <summary>
 /// Update the game world
 /// </summary>

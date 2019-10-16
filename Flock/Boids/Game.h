@@ -20,31 +20,24 @@ public:
 	/// main method for game
 	/// </summary>
 	void run();
-
 	int window_height;
 	int window_width;
-
 private:
-
 	void processEvents();
 	void processKeys(sf::Event t_event);
 	void processMouse(sf::Event t_event);
 	void update(sf::Time t_deltaTime);
 	void render();
-
 	sf::RenderWindow m_window; // main SFML window
 	//Gets the resolution, size, and bits per pixel for the screen of the PC that is running this program.
 	sf::VideoMode desktop = sf::VideoMode::getDesktopMode();
 	sf::Font m_font;
 	sf::Text m_actionMessage; // text used for message on screen
-
 	bool m_exitGame; // control exiting game
-
 	float boidsSize = 3;
 	float enemySize = 10;
 	string action = "flock";
 	bool close = false;
-
 	//Create flock, vector of shapes, and initialize boids
 	Flock flock;
 	vector<sf::CircleShape> shapes;

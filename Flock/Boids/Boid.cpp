@@ -1,3 +1,6 @@
+// |*********************************************************************|
+// |TODO: redeuce the 3 ( or 4) for loops here down to ONE for loop !!!!!|
+// |*********************************************************************|
 // This file defines the boid class. This includes the attributes found in
 // boids -- speed, location on the board, acceleration, etc.
 #include <iostream>
@@ -6,32 +9,26 @@
 #include <math.h>
 #include "SFML/Graphics.hpp"
 #include "Boid.h"
-
 // Global Variables for borders()
 // desktopTemp gets screen resolution of PC running the program
 sf::VideoMode desktopTemp = sf::VideoMode::getDesktopMode(); 
 const int window_height = desktopTemp.height;
 const int window_width = desktopTemp.width;
-
 #define w_height window_height
 #define w_width window_width
 #define PI 3.141592635
-
 using namespace std;
-
 // =============================================== //
 // ======== Boid Functions from Boid.h =========== //
 // =============================================== //
-
 // Adds force Pvector to current force Pvector
 void Boid::applyForce(Pvector force)
 {
 	acceleration.addVector(force);
 }
-
 // Function that checks and modifies the distance
 // of a boid if it breaks the law of separation.
-Pvector Boid::Separation(vector<Boid> boids)
+Pvector Boid::Separation(vector<Boid>& boids)
 {
 	// If the boid we're looking at is a predator, do not run the separation
 	// algorithm
@@ -47,7 +44,7 @@ Pvector Boid::Separation(vector<Boid> boids)
 	{
 		// Calculate distance from current boid to boid we're looking at
 		float d = location.distance(boids[i].location);
-		if (d < neighbourDistance) //Only nearest neighbours
+		if (d < neighbourDistance) // Only nearest neighbours
 		{
 			// If this is a fellow boid and it's too close, move away from it
 			if ((d > 0) && (d < desiredseparation))
@@ -95,18 +92,16 @@ Pvector Boid::Separation(vector<Boid> boids)
 	}
 	return steer;
 }
-
 // Alignment calculates the average velocity in the field of view and 
 // manipulates the velocity of the Boid passed as parameter to adjust to that
 // of nearby boids.
-Pvector Boid::Alignment(vector<Boid> Boids)
+Pvector Boid::Alignment(vector<Boid>& Boids)
 {
 	// If the boid we're looking at is a predator, do not run the alignment
 	// algorithm
 	//if (predator == true)
 	//	return Pvector(0,0);
 //	float neighbordist = 50;
-
 	Pvector sum(0, 0);	
 	int count = 0;
 	for (int i = 0; i < Boids.size(); i++)
@@ -134,18 +129,15 @@ Pvector Boid::Alignment(vector<Boid> Boids)
 		return temp;
 	}
 }
-
 // Cohesion finds the average location of nearby boids and manipulates the 
 // steering force to move in that direction.
-Pvector Boid::Cohesion(vector<Boid> Boids)
+Pvector Boid::Cohesion(vector<Boid>& Boids)
 {
 	// If the boid we're looking at is a predator, do not run the cohesion
 	// algorithm
 	//if (predator == true)
 	//	return Pvector(0,0);
-
 //	float neighbordist = 50;
-
 	Pvector sum(0, 0);	
 	int count = 0;
 	for (int i = 0; i < Boids.size(); i++)
@@ -166,7 +158,6 @@ Pvector Boid::Cohesion(vector<Boid> Boids)
 		return temp;
 	}
 }
-
 // Seek function limits the maxSpeed, finds necessary steering force and
 // normalizes the vectors.
 Pvector Boid::seek(Pvector v)
@@ -181,7 +172,6 @@ Pvector Boid::seek(Pvector v)
 	acceleration.limit(maxForce);  // Limit to maximum steering force
 	return acceleration;
 }
-
 //Update modifies velocity, location, and resets acceleration with values that
 //are given by the three laws.
 void Boid::update()
@@ -196,11 +186,10 @@ void Boid::update()
 	// Reset accelertion to 0 each cycle
 	acceleration.mulScalar(0);
 }
-
 //Run runs flock on the flock of boids for each boid.
 //Which applies the three rules, modifies accordingly, updates data, checks is data is
 //out of range, fixes that for SFML, and renders it on the window.
-void Boid::run(vector <Boid> v)
+void Boid::run(vector <Boid>& v)
 {
 	flock(v);
 	update();
@@ -209,7 +198,7 @@ void Boid::run(vector <Boid> v)
 
 //Applies all three laws for the flock of boids and modifies to keep them from
 //breaking the laws.
-void Boid::flock(vector<Boid> v) 
+void Boid::flock(vector<Boid>& v) 
 {
 	Pvector sep = Separation(v);
 	Pvector ali = Alignment(v);
@@ -242,21 +231,30 @@ float Boid::angle(Pvector v)
 	return angle;
 }
 
-void Boid::swarm(vector <Boid> v)
+void Boid::swarm(vector <Boid>& v)
 {
-/*		Lenard-Jones Potential function
-			Vector R = me.position - you.position
-			Real D = R.magnitude()
-			Real U = -A / pow(D, N) + B / pow(D, M)
-			R.normalise()
-			force = force + R*U
-*/
-	Pvector	R;
+	/*		Lenard-Jones Potential function
+				Vector R = me.position - you.position
+				Real D = R.magnitude()
+				Real U = -A / pow(D, N) + B / pow(D, M)
+				R.normalise()
+				force = force + R*U
+	*/
 	Pvector sum(0, 0);
-
-// Your code here..
-
-	applyForce(sum);
-	update();
-	borders();
+	for (Boid boid : v) {
+		Pvector	R;
+		// let's swarm always to last boid, 
+		// at begining will be the last swarm gu and then will swarm to each new pred
+		R.x = boid.location.x - v.back().location.x;
+		R.y = boid.location.y - v.back().location.y;
+		float realD = R.magnitude();
+		auto realU = -A / pow(realD, N) + B / pow(realD, M);
+		R.normalize();
+		sum.x = sum.x + R.x * realU;
+		sum.y = sum.y + R.y * realU;
+	}
+		applyForce(sum);
+		update();
+		borders();
 }
+	

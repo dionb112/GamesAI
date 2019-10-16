@@ -26,6 +26,11 @@ from predators. There are several ways to do this. The easiest way:
 	that maximizes separation.
 */
 
+static const int N = 12;
+static const int M = 6;
+static const float A = 0.1f;
+static const float B = 0.1f;
+
 class Boid
 {
 public:
@@ -61,28 +66,26 @@ public:
 		acceleration = Pvector(0, 0);
 		location = Pvector(x, y);
 	}
-/* 
-Destructors are commented out for now. g++ throws errors if they are included.
-   If compiling on Visual Studio, however, no errors are thrown.
-	//Destructor
-	Boid::~Boid()
-	{
-		//cout << "Boid is being deleted by destructor!" << endl;
-	}
-*/	
+
+	////Destructor back in since visual studio - no back out because it estorys all objects immidiately 
+	//Boid::~Boid()
+	//{
+	//	cout << "Boid is being deleted by destructor!" << endl;
+	//}
+	
 	void applyForce(Pvector force);
 	// Three Laws that boids follow
-	Pvector Separation(vector<Boid> Boids);
-	Pvector Alignment(vector<Boid> Boids);
-	Pvector Cohesion(vector<Boid> Boids);
+	Pvector Separation(vector<Boid>& Boids);
+	Pvector Alignment(vector<Boid>& Boids);
+	Pvector Cohesion(vector<Boid>& Boids);
 	//Functions involving SFML and visualisation linking
 	Pvector seek(Pvector v);
-	void run(vector <Boid> v);
+	void run(vector <Boid>& v);
 	void update();
-	void flock(vector <Boid> v);
+	void flock(vector <Boid>& v);
 	void borders();
 	float angle(Pvector v);
-	void swarm(vector <Boid> v);
+	void swarm(vector <Boid>& v);
 };
 
 #endif
