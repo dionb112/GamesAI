@@ -233,28 +233,17 @@ float Boid::angle(Pvector v)
 
 void Boid::swarm(vector <Boid>& v)
 {
-	/*		Lenard-Jones Potential function
-				Vector R = me.position - you.position
-				Real D = R.magnitude()
-				Real U = -A / pow(D, N) + B / pow(D, M)
-				R.normalise()
-				force = force + R*U
-	*/
-	Pvector sum(0, 0);
-	for (Boid boid : v) {
-		Pvector	R;
-		// let's swarm always to last boid, 
-		// at begining will be the last swarm gu and then will swarm to each new pred
-		R.x = boid.location.x - v.back().location.x;
-		R.y = boid.location.y - v.back().location.y;
-		float realD = R.magnitude();
-		auto realU = -A / pow(realD, N) + B / pow(realD, M);
-		R.normalize();
-		sum.x = sum.x + R.x * realU;
-		sum.y = sum.y + R.y * realU;
-	}
-		applyForce(sum);
-		update();
-		borders();
+	Pvector	R(0, 0);
+	// Lenard-Jones Potential function
+	// let's swarm always to last boid, at begining will be the last swarm guy
+	// and then will swarm to each new pred
+	R = R.subTwoVector(location, v.back().location);
+	float D = R.magnitude();
+	float U = -pow(D, N) + pow(D, M);
+	R.normalize();
+	R.mulScalar(U);
+	applyForce(R);
+	update();
+	borders();
 }
 	

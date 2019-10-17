@@ -26,10 +26,10 @@ from predators. There are several ways to do this. The easiest way:
 	that maximizes separation.
 */
 
-static const int N = 12;
-static const int M = 6;
-static const float A = 0.1f;
-static const float B = 0.1f;
+static const float N = 5;
+static const float M = 2.5f;
+static const float A = -1;
+static const float B = -1;
 
 class Boid
 {
