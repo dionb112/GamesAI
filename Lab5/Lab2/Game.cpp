@@ -8,8 +8,9 @@ Game::Game() :
 	m_exitGame{false},
 	m_turningRight{false},
 	m_turningLeft{false},
-	m_behaviour{"individual"}
+	m_behaviour{INDIVIDUAL}
 {
+	m_positionSlots.reserve(1);
 	m_window.setVerticalSyncEnabled(1);
 	setupNPCs(); 
 	setupFontAndText(); 
@@ -73,11 +74,11 @@ void Game::processKeyPressed(sf::Event t_event) {
 	}
 	if (sf::Keyboard::Space == t_event.key.code)
 	{
-		if (m_behaviour != "formation") {
-			m_behaviour = "formation";
+		if (m_behaviour != FORMATION) {
+			m_behaviour = FORMATION;
 		}
 		else {
-			m_behaviour = "individual";
+			m_behaviour = INDIVIDUAL;
 		}
 		setNPCData();
 	}
@@ -123,8 +124,14 @@ void Game::update(float t_deltaTime) {
 		m_window.close();
 	} else {
 		m_player.update(t_deltaTime);
+		m_positionSlots.push_back(&m_player.getPosition());
 		for (int i = 0; i < m_NPCs.size(); i++) {
-			m_NPCs[i]->update(t_deltaTime, m_player.getPosition(), m_player.getVelocity());
+			if (m_behaviour == INDIVIDUAL) {
+				m_NPCs[i]->update(t_deltaTime, m_player.getPosition(), m_player.getVelocity(), sf::Vector2f{ 0, 0 });
+			}
+			else if (m_behaviour == FORMATION){
+				m_NPCs[i]->update(t_deltaTime, m_player.getPosition(), m_player.getVelocity(), *m_positionSlots[0]);
+			}
 			m_NPCTexts[i]->setPosition(m_NPCs[i]->getPosition().x + 75, m_NPCs[i]->getPosition().y);
 		}
 	}

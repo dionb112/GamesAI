@@ -24,7 +24,7 @@ public:
 	void dynamicPursue(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo);
 	void closestApproach();
 
-	void update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo);
+	void update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo, sf::Vector2f& t_slotPos);
 	void render(sf::RenderWindow& t_window);
 	void setupBehaviourAndSprite(Type t_type);
 	sf::Vector2f getPosition() { return m_myPosition; }

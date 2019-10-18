@@ -15,7 +15,7 @@ void NPC::kinematicFlee(float t_deltaTime, sf::Vector2f& t_playerPos) {
 	m_velocity *= MAX_VELOCITY;
 	m_orientation = Kinematic::getNewOrientation(m_orientation, m_velocity);
 }
-void NPC::update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo) {
+void NPC::update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_playerVelo, sf::Vector2f& t_slotPos) {
 	bool isFlee = false;
 	switch (m_behaviourType)
 	{
@@ -35,6 +35,8 @@ void NPC::update(float t_deltaTime, sf::Vector2f& t_playerPos, sf::Vector2f& t_p
 	case pursue:
 		dynamicPursue(t_deltaTime / 4.2f, t_playerPos, t_playerVelo);
 		break;
+	case form:
+		kinematicSeek(t_deltaTime / 4.2f, t_slotPos);
 	default:
 		break;
 	}

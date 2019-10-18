@@ -14,6 +14,8 @@ public:
 	Game();
 	void run();
 private:
+	const std::string INDIVIDUAL = "individual";
+	const std::string FORMATION = "formation";
 	std::string m_behaviour;
 	bool m_turningRight;
 	bool m_turningLeft;
