@@ -26,11 +26,6 @@ from predators. There are several ways to do this. The easiest way:
 	that maximizes separation.
 */
 
-static const float N = 5;
-static const float M = 2.5f;
-static const float A = -1;
-static const float B = -1;
-
 class Boid
 {
 public:
@@ -40,51 +35,52 @@ public:
 	Pvector acceleration;
 	float maxSpeed;
 	float maxForce;
-	int neighbourDistance = 50;
-
 	Boid() {}
 	Boid(float x, float y)
 	{
 		acceleration = Pvector(0, 0);
-		velocity = Pvector(rand()%3-2, rand()%3-2); // Allows for range of -2 -> 2
+		velocity = Pvector(rand() % 3 - 2, rand() % 3 - 2); // Allows for range of -2 -> 2
 		location = Pvector(x, y);
-		maxSpeed = 3.5;
+		maxSpeed = 5;
 		maxForce = 0.5;
 	}
-	Boid(float x, float y, bool predCheck) 
+	Boid(float x, float y, bool predCheck)
 	{
 		predator = predCheck;
 		if (predCheck == true) {
-			maxSpeed = 7.5;
+			maxSpeed = 10;
 			maxForce = 0.5;
-			velocity = Pvector(rand()%3-1, rand()%3-1);
-		} else {
+			velocity = Pvector(rand() % 3 - 1, rand() % 3 - 1);
+		}
+		else {
 			maxSpeed = 3.5;
 			maxForce = 0.5;
-			velocity = Pvector(rand()%3-2, rand()%3-2); // Allows for range of -2 -> 2
+			velocity = Pvector(rand() % 3 - 2, rand() % 3 - 2); // Allows for range of -2 -> 2
 		}
 		acceleration = Pvector(0, 0);
 		location = Pvector(x, y);
 	}
-
-	////Destructor back in since visual studio - no back out because it estorys all objects immidiately 
-	//Boid::~Boid()
-	//{
-	//	cout << "Boid is being deleted by destructor!" << endl;
-	//}
-	
-	void applyForce(Pvector force);
+	/*
+	Destructors are commented out for now. g++ throws errors if they are included.
+	   If compiling on Visual Studio, however, no errors are thrown.
+		//Destructor
+		Boid::~Boid()
+		{
+			//cout << "Boid is being deleted by destructor!" << endl;
+		}
+	*/
+	void applyForce(Pvector& force);
 	// Three Laws that boids follow
 	Pvector Separation(vector<Boid>& Boids);
 	Pvector Alignment(vector<Boid>& Boids);
 	Pvector Cohesion(vector<Boid>& Boids);
 	//Functions involving SFML and visualisation linking
-	Pvector seek(Pvector v);
+	Pvector seek(Pvector& v);
 	void run(vector <Boid>& v);
 	void update();
 	void flock(vector <Boid>& v);
 	void borders();
-	float angle(Pvector v);
+	float angle(Pvector& v);
 	void swarm(vector <Boid>& v);
 };
 

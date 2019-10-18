@@ -11,6 +11,7 @@ enum Type
 	arrive,
 	flee,
 	pursue,
+	form
 };
 class NPC
 {

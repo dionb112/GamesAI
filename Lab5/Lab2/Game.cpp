@@ -7,12 +7,14 @@ Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W, SCR_H, 32U }, "SFML Game" },//, sf::Style::Fullscreen },
 	m_exitGame{false},
 	m_turningRight{false},
-	m_turningLeft{false}
+	m_turningLeft{false},
+	m_behaviour{"individual"}
 {
 	m_window.setVerticalSyncEnabled(1);
 	setupNPCs(); 
 	setupFontAndText(); 
-	setupSprite(); 
+	m_player.setupSprite();
+	setNPCData(); 
 }
 /// <summary>
 /// update 60 times per second,
@@ -50,9 +52,13 @@ void Game::processEvents() {
 		{
 			m_exitGame = true;
 		}
-		if (sf::Event::KeyPressed == newEvent.type || sf::Event::KeyReleased == newEvent.type) //user pressed a key
+		if (sf::Event::KeyPressed == newEvent.type) 
 		{
-			processKeys(newEvent);
+			processKeyPressed(newEvent);
+		}
+		if (sf::Event::KeyReleased == newEvent.type)
+		{
+			processKeyReleased(newEvent);
 		}
 	}
 }
@@ -60,10 +66,20 @@ void Game::processEvents() {
 /// deal with key presses from the user
 /// </summary>
 /// <param name="t_event">key press event</param>
-void Game::processKeys(sf::Event t_event) {
+void Game::processKeyPressed(sf::Event t_event) {
 
 	if (sf::Keyboard::Escape == t_event.key.code) {
 		m_exitGame = true;
+	}
+	if (sf::Keyboard::Space == t_event.key.code)
+	{
+		if (m_behaviour != "formation") {
+			m_behaviour = "formation";
+		}
+		else {
+			m_behaviour = "individual";
+		}
+		setNPCData();
 	}
 	if (sf::Keyboard::Right == t_event.key.code)
 	{
@@ -83,19 +99,19 @@ void Game::processKeys(sf::Event t_event) {
 	{
 		m_player.down();
 	}
-	if (sf::Event::KeyReleased == t_event.type)
+}
+void Game::processKeyReleased(sf::Event t_event)
+{
+	switch (t_event.key.code)
 	{
-		switch (t_event.key.code)
-		{
-		case sf::Keyboard::Right:
-			m_turningRight = false;
-			break;
-		case sf::Keyboard::Left:
-			m_turningLeft = false;
-			break;
-		default:
-			break;
-		}
+	case sf::Keyboard::Right:
+		m_turningRight = false;
+		break;
+	case sf::Keyboard::Left:
+		m_turningLeft = false;
+		break;
+	default:
+		break;
 	}
 }
 /// <summary>
@@ -130,14 +146,26 @@ void Game::render() {
 /// /// <summary>
 /// load the texture and setup the sprite for the logo
 /// </summary>
-void Game::setupSprite() {
-	m_player.setupSprite();
-	m_NPCs[0]->setupBehaviourAndSprite(Type::wander);
-	m_NPCs[1]->setupBehaviourAndSprite(Type::seek);
-	m_NPCs[2]->setupBehaviourAndSprite(Type::flee);
-	m_NPCs[3]->setupBehaviourAndSprite(Type::pursue);
-	m_NPCs[4]->setupBehaviourAndSprite(Type::arrive);
+void Game::setNPCData() {
+	if (m_behaviour == "individual") {
+		m_NPCs[0]->setupBehaviourAndSprite(Type::wander);
+		m_NPCs[1]->setupBehaviourAndSprite(Type::seek);
+		m_NPCs[2]->setupBehaviourAndSprite(Type::flee);
+		m_NPCs[3]->setupBehaviourAndSprite(Type::pursue);
+		m_NPCs[4]->setupBehaviourAndSprite(Type::arrive);
 
+		m_NPCTexts[0]->setString("Wander");
+		m_NPCTexts[1]->setString("Seek");
+		m_NPCTexts[2]->setString("Flee");
+		m_NPCTexts[3]->setString("Pursue");
+		m_NPCTexts[4]->setString("Arrive");
+	}
+	else if (m_behaviour == "formation") {
+		for (int i = 0; i < m_NPCs.size(); i++) {
+			m_NPCs[i]->setupBehaviourAndSprite(Type::form);
+			m_NPCTexts[i]->setString("Form");
+		}
+	}
 }
 void Game::setupNPCs()
 {
@@ -165,9 +193,4 @@ void Game::setupFontAndText()
 		text->setFillColor(sf::Color::Black);
 		text->setOutlineThickness(3.0f);
 	}
-	m_NPCTexts[0]->setString("Wander");
-	m_NPCTexts[1]->setString("Seek");
-	m_NPCTexts[2]->setString("Flee");
-	m_NPCTexts[3]->setString("Pursue");
-	m_NPCTexts[4]->setString("Arrive");
 }

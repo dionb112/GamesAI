@@ -173,6 +173,11 @@ void NPC::setupBehaviourAndSprite(Type t_type) {
 			std::cout << "problem loading pursuir" << std::endl;
 		}
 		break;
+	case form:
+		if (!m_spriteTexture.loadFromFile("ASSETS\\IMAGES\\form.png"))
+		{
+			std::cout << "problem loading form texture" << std::endl;
+		}
 	default:
 		break;
 	}

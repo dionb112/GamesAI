@@ -24,15 +24,15 @@ public:
 
 	//Constructors
 	Flock() {}
-/*
-Commented out for now, since including destructors causes g++ to spit back
-errors. 
-	//Destructor
-	Flock::~Flock()
-	{
-		//cout << "Flock is being deleted by destructor!" << endl;
-	}
-*/
+	/*
+	Commented out for now, since including destructors causes g++ to spit back
+	errors.
+		//Destructor
+		Flock::~Flock()
+		{
+			//cout << "Flock is being deleted by destructor!" << endl;
+		}
+	*/
 	//Accessor functions
 	int getSize();
 	Boid getBoid(int i);
@@ -40,6 +40,7 @@ errors.
 	void addBoid(Boid b);
 	void flocking();
 	void swarming();
+	void cFormation(int fLeader);
 
 };
 

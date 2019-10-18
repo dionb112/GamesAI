@@ -1,4 +1,13 @@
-# Boids
+# Swarm
+
+This is an extension of the existing Boids program by jyanar. See: https://github.com/jyanar/Boids
+I extended it to include a swarming behaviour based on the Lenard-Jones potential function.
+The user can now switch between Floacking and Swarming behaviours by pressing the Space Bar.
+
+
+Original Readme:
+
+Boids
 
 This project attempts to simulate flocking behavior, through the creation of simple entities called Boids (birdoids). These boids, which exist on a two-dimensional plane, function through three simple rules -- alignment, cohesion, and separation.
 
