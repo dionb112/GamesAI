@@ -10,7 +10,6 @@ Game::Game() :
 	m_turningLeft{false},
 	m_behaviour{INDIVIDUAL}
 {
-	m_positionSlots.reserve(1);
 	m_window.setVerticalSyncEnabled(1);
 	setupNPCs(); 
 	setupFontAndText(); 
@@ -124,12 +123,15 @@ void Game::update(float t_deltaTime) {
 		m_window.close();
 	} else {
 		m_player.update(t_deltaTime);
-		m_positionSlots.push_back(&m_player.getPosition());
+		m_positionSlots[0] = &m_player.getPosition();
 		for (int i = 0; i < m_NPCs.size(); i++) {
 			if (m_behaviour == INDIVIDUAL) {
 				m_NPCs[i]->update(t_deltaTime, m_player.getPosition(), m_player.getVelocity(), sf::Vector2f{ 0, 0 });
 			}
 			else if (m_behaviour == FORMATION){
+				if (i > 0) {
+					m_positionSlots[i] = &m_NPCs[i-1]->getPosition();
+				}
 				m_NPCs[i]->update(t_deltaTime, m_player.getPosition(), m_player.getVelocity(), *m_positionSlots[0]);
 			}
 			m_NPCTexts[i]->setPosition(m_NPCs[i]->getPosition().x + 75, m_NPCs[i]->getPosition().y);
@@ -178,9 +180,11 @@ void Game::setupNPCs()
 {
 	m_NPCs.reserve(5);
 	m_NPCTexts.reserve(m_NPCs.capacity());
+	m_positionSlots.reserve(m_NPCs.capacity());
 	for (int i = 0; i < m_NPCs.capacity(); i++) {
 		m_NPCs.push_back(new NPC());
 		m_NPCTexts.push_back(new sf::Text());
+		m_positionSlots.push_back(&m_NPCs[i]->getPosition());
 	}
 }
 /// <summary>

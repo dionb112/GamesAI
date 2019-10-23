@@ -1,10 +1,11 @@
 ﻿#include "NPC.h"
 NPC::NPC() :
 	m_velocity{ -MAX_VELOCITY, 0.0f },
-	m_myPosition{ SCR_W / 2, SCR_H / 2 },
 	m_orientation{ 0.0f },
 	m_rotation{ 0.0f },
 	m_targetPosition{ 0.0f, 0.0f } {
+	m_myPosition = m_startPos;
+	m_startPos.x *= 2;
 	srand(time(NULL));			// initialize 'random' seed
 	m_generateTarget();
 }

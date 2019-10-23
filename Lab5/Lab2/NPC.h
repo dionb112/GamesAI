@@ -4,6 +4,7 @@
 #include "Kinematic.h"
 #include <cstdlib>    
 #include <ctime>   
+static sf::Vector2f m_startPos = { 200, 200 };
 enum Type 
 { 
 	wander, 
