@@ -1,39 +1,15 @@
 #include "Game.h"
 #include <iostream>
-
-
-
-/// <summary>
-/// default constructor
-/// setup the window properties
-/// load and setup the text 
-/// load and setup thne image
-/// </summary>
 Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W - 50, SCR_H - 100, 32U }, "Flow field"},
 	m_exitGame{false} //when true game will exit
 {
 	m_window.setVerticalSyncEnabled(1);
-	setupFontAndText(); // load font 
 	setupSprite(); // load texture
 }
-
-/// <summary>
-/// default destructor we didn't dynamically allocate anything
-/// so we don't need to free it, but mthod needs to be here
-/// </summary>
 Game::~Game()
 {
 }
-
-
-/// <summary>
-/// main game loop
-/// update 60 times per second,
-/// process update as often as possible and at least 60 times per second
-/// draw as often as possible but only updates are on time
-/// if updates run slow then don't render frames
-/// </summary>
 void Game::run()
 {	
 	sf::Clock clock;
@@ -73,12 +49,6 @@ void Game::processEvents()
 		}
 	}
 }
-
-
-/// <summary>
-/// deal with key presses from the user
-/// </summary>
-/// <param name="t_event">key press event</param>
 void Game::processKeys(sf::Event t_event)
 {
 	if (sf::Keyboard::Escape == t_event.key.code)
@@ -86,11 +56,6 @@ void Game::processKeys(sf::Event t_event)
 		m_exitGame = true;
 	}
 }
-
-/// <summary>
-/// Update the game world
-/// </summary>
-/// <param name="t_deltaTime">time interval per frame</param>
 void Game::update(sf::Time t_deltaTime)
 {
 	if (m_exitGame)
@@ -102,22 +67,20 @@ void Game::update(sf::Time t_deltaTime)
 	for (int i = 0; i < COLUMNS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			m_grid[i][j].setSize(cellSize);
-			m_grid[i][j].setFillColor(sf::Color::Black);
+			m_grid[i][j].setFillColor(sf::Color(0,0,0,0));
 			m_grid[i][j].setOutlineColor(sf::Color::Blue);
 			m_grid[i][j].setOutlineThickness(5.0f);
 			m_grid[i][j].setPosition(i * cellSize.x + 5.0f, j * cellSize.y + 5.0f);
 		}
 	}
 }
-
 /// <summary>
 /// draw the frame and then switch buffers
 /// </summary>
 void Game::render()
 {
 	m_window.clear(sf::Color::Black);
-	m_window.draw(m_welcomeMessage);
-	m_window.draw(m_logoSprite);
+	m_window.draw(m_arrowSprite);
 	for (int i = 0; i < COLUMNS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			m_window.draw(m_grid[i][j]);
@@ -125,37 +88,13 @@ void Game::render()
 	}
 	m_window.display();
 }
-
-/// <summary>
-/// load the font and setup the text message for screen
-/// </summary>
-void Game::setupFontAndText()
-{
-	if (!m_ArialBlackfont.loadFromFile("ASSETS\\FONTS\\ariblk.ttf"))
-	{
-		std::cout << "problem loading arial black font" << std::endl;
-	}
-	m_welcomeMessage.setFont(m_ArialBlackfont);
-	m_welcomeMessage.setString("SFML Game");
-	m_welcomeMessage.setStyle(sf::Text::Underlined | sf::Text::Italic | sf::Text::Bold);
-	m_welcomeMessage.setPosition(40.0f, 40.0f);
-	m_welcomeMessage.setCharacterSize(80U);
-	m_welcomeMessage.setOutlineColor(sf::Color::Red);
-	m_welcomeMessage.setFillColor(sf::Color::Black);
-	m_welcomeMessage.setOutlineThickness(3.0f);
-
-}
-
-/// <summary>
-/// load the texture and setup the sprite for the logo
-/// </summary>
 void Game::setupSprite()
 {
-	if (!m_logoTexture.loadFromFile("ASSETS\\IMAGES\\SFML-LOGO.png"))
+	if (!m_logoTexture.loadFromFile("ASSETS\\IMAGES\\arrow.png"))
 	{
 		// simple error message if previous call fails
-		std::cout << "problem loading logo" << std::endl;
+		std::cout << "problem loading arrow" << std::endl;
 	}
-	m_logoSprite.setTexture(m_logoTexture);
-	m_logoSprite.setPosition(300.0f, 180.0f);
+	m_arrowSprite.setTexture(m_logoTexture);
+	m_arrowSprite.setPosition(10, 10);
 }
