@@ -17,6 +17,7 @@ public:
 	void run();
 
 private:
+	sf::Vector2f m_goal;
 	const static int COLUMNS = 50;
 	const static int ROWS = 50;
 	sf::RectangleShape m_grid[COLUMNS][ROWS];

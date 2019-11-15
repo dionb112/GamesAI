@@ -2,7 +2,8 @@
 #include <iostream>
 Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W - 50, SCR_H - 100, 32U }, "Flow field"},
-	m_exitGame{false} //when true game will exit
+	m_exitGame{false},
+	m_goal(0,0)
 {
 	m_window.setVerticalSyncEnabled(1);
 	setupSprite(); // load texture
@@ -46,6 +47,14 @@ void Game::processEvents()
 		if (sf::Event::KeyPressed == newEvent.type) //user pressed a key
 		{
 			processKeys(newEvent);
+		}
+		if (sf::Event::MouseButtonPressed == newEvent.type) //user pressed a key
+		{
+			if (sf::Mouse::Left == newEvent.mouseButton.button)
+			{
+				std::cout << newEvent.mouseButton.x << std::endl;
+				std::cout << newEvent.mouseButton.y << std::endl;
+			}
 		}
 	}
 }
