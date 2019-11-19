@@ -3,10 +3,20 @@
 Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W - 50, SCR_H - 100, 32U }, "Flow field"},
 	m_exitGame{false},
-	m_goal(0,0)
+	m_goal(0,0),
+	m_cellSize(SCR_W / 51, SCR_H / 52)
 {
 	m_window.setVerticalSyncEnabled(1);
 	setupSprite(); // load texture
+	for (int i = 0; i < COLUMNS; i++) {
+		for (int j = 0; j < ROWS; j++) {
+			m_grid[i][j].setSize(m_cellSize);
+			m_grid[i][j].setFillColor(sf::Color(0, 0, 0, 0));
+			m_grid[i][j].setOutlineColor(sf::Color::Blue);
+			m_grid[i][j].setOutlineThickness(1.0f);
+			m_grid[i][j].setPosition(i * m_cellSize.x + 5.0f, j * m_cellSize.y + 5.0f);
+		}
+	}
 }
 Game::~Game()
 {
@@ -52,8 +62,7 @@ void Game::processEvents()
 		{
 			if (sf::Mouse::Left == newEvent.mouseButton.button)
 			{
-				std::cout << newEvent.mouseButton.x << std::endl;
-				std::cout << newEvent.mouseButton.y << std::endl;
+				click(newEvent);
 			}
 		}
 	}
@@ -71,17 +80,6 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
-	sf::Vector2f cellSize(SCR_W / 51, SCR_H / 52);
-
-	for (int i = 0; i < COLUMNS; i++) {
-		for (int j = 0; j < ROWS; j++) {
-			m_grid[i][j].setSize(cellSize);
-			m_grid[i][j].setFillColor(sf::Color(0,0,0,0));
-			m_grid[i][j].setOutlineColor(sf::Color::Blue);
-			m_grid[i][j].setOutlineThickness(5.0f);
-			m_grid[i][j].setPosition(i * cellSize.x + 5.0f, j * cellSize.y + 5.0f);
-		}
-	}
 }
 /// <summary>
 /// draw the frame and then switch buffers
@@ -96,6 +94,20 @@ void Game::render()
 		}
 	}
 	m_window.display();
+}
+void Game::click(sf::Event t_event)
+{
+	std::cout << t_event.mouseButton.x << std::endl;
+	std::cout << t_event.mouseButton.y << std::endl;
+	for (int i = 0; i < COLUMNS; i++) {
+		for (int j = 0; j < ROWS; j++) {
+			if (m_grid[i][j].getPosition().x - t_event.mouseButton.x < m_cellSize.x / 50) {
+
+				m_grid[i][j].setFillColor(sf::Color(255, 255, 255, 255));
+				m_grid[i][j].setPosition(i * m_cellSize.x + 5.0f, j * m_cellSize.y + 5.0f);
+			}
+		}
+	}
 }
 void Game::setupSprite()
 {
