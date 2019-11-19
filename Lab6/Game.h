@@ -17,6 +17,9 @@ public:
 	void run();
 
 private:
+	sf::Vector2i m_prevStart;
+	sf::Vector2i m_prevGoal;
+	bool m_rightClickState;
 	sf::Vector2f m_cellSize;
 	sf::Vector2f m_goal;
 	const static int COLUMNS = 50;
@@ -26,7 +29,8 @@ private:
 	void processKeys(sf::Event t_event);
 	void update(sf::Time t_deltaTime);
 	void render();
-	void click(sf::Event t_event);
+	void leftClick(sf::Event t_event);
+	void rightClick(sf::Event t_event);
 	void setupSprite();
 
 	sf::RenderWindow m_window; // main SFML window

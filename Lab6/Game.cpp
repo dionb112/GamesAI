@@ -4,7 +4,10 @@ Game::Game() :
 	m_window{ sf::VideoMode{ SCR_W - 50, SCR_H - 100, 32U }, "Flow field"},
 	m_exitGame{false},
 	m_goal(0,0),
-	m_cellSize(SCR_W / 51, SCR_H / 52)
+	m_cellSize(SCR_W / 51, SCR_H / 52),
+	m_rightClickState(false),
+	m_prevStart(-1,-1),
+	m_prevGoal(-1,-1)
 {
 	m_window.setVerticalSyncEnabled(1);
 	setupSprite(); // load texture
@@ -62,7 +65,11 @@ void Game::processEvents()
 		{
 			if (sf::Mouse::Left == newEvent.mouseButton.button)
 			{
-				click(newEvent);
+				leftClick(newEvent);
+			}
+			if (sf::Mouse::Right == newEvent.mouseButton.button)
+			{
+				rightClick(newEvent);
 			}
 		}
 	}
@@ -80,6 +87,7 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
+	// if colour of tile is white -> not traversable
 }
 /// <summary>
 /// draw the frame and then switch buffers
@@ -95,14 +103,37 @@ void Game::render()
 	}
 	m_window.display();
 }
-void Game::click(sf::Event t_event)
+void Game::leftClick(sf::Event t_event)
 {
-	std::cout << t_event.mouseButton.x << std::endl;
-	std::cout << t_event.mouseButton.y << std::endl;
 	for (int i = 0; i < COLUMNS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			if (sqrt(pow(m_grid[i][j].getPosition().x - t_event.mouseButton.x, 2) + pow(m_grid[i][j].getPosition().y - t_event.mouseButton.y, 2)) < 11) {
 				m_grid[i][j].setFillColor(sf::Color(255, 255, 255, 255));
+			}
+		}
+	}
+}
+void Game::rightClick(sf::Event t_event)
+{
+	for (int i = 0; i < COLUMNS; i++) {
+		for (int j = 0; j < ROWS; j++) {
+			if (sqrt(pow(m_grid[i][j].getPosition().x - t_event.mouseButton.x, 2) + pow(m_grid[i][j].getPosition().y - t_event.mouseButton.y, 2)) < 11) {
+				if (m_rightClickState == false) {
+					m_grid[i][j].setFillColor(sf::Color::Green);
+					m_rightClickState = true;
+					if (m_prevStart != sf::Vector2i{ -1,-1 }) {
+						m_grid[m_prevStart.x][m_prevStart.y].setFillColor(sf::Color(0, 0, 0, 0));
+					}
+					m_prevStart = sf::Vector2i{ i,j };
+				}
+				else if (m_rightClickState == true) {
+					m_grid[i][j].setFillColor(sf::Color::Red);
+					m_rightClickState = false;
+					if (m_prevGoal != sf::Vector2i{ -1,-1 }) {
+						m_grid[m_prevGoal.x][m_prevGoal.y].setFillColor(sf::Color(0, 0, 0, 0));
+					}
+					m_prevGoal = sf::Vector2i{ i,j };
+				}
 			}
 		}
 	}
