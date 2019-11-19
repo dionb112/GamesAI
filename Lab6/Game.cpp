@@ -101,10 +101,8 @@ void Game::click(sf::Event t_event)
 	std::cout << t_event.mouseButton.y << std::endl;
 	for (int i = 0; i < COLUMNS; i++) {
 		for (int j = 0; j < ROWS; j++) {
-			if (m_grid[i][j].getPosition().x - t_event.mouseButton.x < m_cellSize.x / 50) {
-
+			if (sqrt(pow(m_grid[i][j].getPosition().x - t_event.mouseButton.x, 2) + pow(m_grid[i][j].getPosition().y - t_event.mouseButton.y, 2)) < 11) {
 				m_grid[i][j].setFillColor(sf::Color(255, 255, 255, 255));
-				m_grid[i][j].setPosition(i * m_cellSize.x + 5.0f, j * m_cellSize.y + 5.0f);
 			}
 		}
 	}
