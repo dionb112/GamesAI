@@ -7,7 +7,8 @@ Game::Game() :
 	m_cellSize(SCR_W / 100, SCR_W / 100),
 	m_rightClickState(false),
 	m_prevStart(-1,-1),
-	m_prevGoal(-1,-1)
+	m_prevGoal(-1,-1),
+	m_isLeftMouseHeld(false)
 {
 	m_window.setVerticalSyncEnabled(1);
 	setupSprite(); // load texture
@@ -61,15 +62,22 @@ void Game::processEvents()
 		{
 			processKeys(newEvent);
 		}
-		if (sf::Event::MouseButtonPressed == newEvent.type) //user pressed a key
+		if (sf::Event::MouseButtonPressed == newEvent.type) //user pressed a mouse
 		{
 			if (sf::Mouse::Left == newEvent.mouseButton.button)
 			{
-				leftClick(newEvent);
+				m_isLeftMouseHeld = true;
 			}
 			if (sf::Mouse::Right == newEvent.mouseButton.button)
 			{
 				rightClick(newEvent);
+			}
+		}
+		else if (sf::Event::MouseButtonReleased == newEvent.type) //user released mouse
+		{
+			if (sf::Mouse::Left == newEvent.mouseButton.button)
+			{
+				m_isLeftMouseHeld = false;
 			}
 		}
 	}
@@ -87,6 +95,9 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
+	if (m_isLeftMouseHeld == true) {
+		leftClick();
+	}
 	// if colour of tile is white -> not traversable
 }
 /// <summary>
@@ -103,11 +114,11 @@ void Game::render()
 	}
 	m_window.display();
 }
-void Game::leftClick(sf::Event t_event)
+void Game::leftClick()
 {
 	for (int i = 0; i < COLUMNS; i++) {
 		for (int j = 0; j < ROWS; j++) {
-			if (sqrt(pow((m_grid[i][j].getPosition().x + m_cellSize.x / 2) - t_event.mouseButton.x, 2) + pow((m_grid[i][j].getPosition().y + m_cellSize.y / 2) - t_event.mouseButton.y, 2)) < m_cellSize.x / 1.75) {
+			if (sqrt(pow((m_grid[i][j].getPosition().x + m_cellSize.x / 2) - sf::Mouse::getPosition(m_window).x, 2) + pow((m_grid[i][j].getPosition().y + m_cellSize.y / 2) - sf::Mouse::getPosition(m_window).y, 2)) < m_cellSize.x / 1.75) {
 				m_grid[i][j].setFillColor(sf::Color(255, 255, 255, 255));
 			}
 		}

@@ -17,6 +17,7 @@ public:
 	void run();
 
 private:
+	bool m_isLeftMouseHeld;
 	sf::Vector2i m_prevStart;
 	sf::Vector2i m_prevGoal;
 	bool m_rightClickState;
@@ -29,7 +30,7 @@ private:
 	void processKeys(sf::Event t_event);
 	void update(sf::Time t_deltaTime);
 	void render();
-	void leftClick(sf::Event t_event);
+	void leftClick();
 	void rightClick(sf::Event t_event);
 	void setupSprite();
 
