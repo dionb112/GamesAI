@@ -18,6 +18,7 @@ public:
 
 private:
 	bool m_isLeftMouseHeld;
+	bool m_isMiddleMouseHeld;
 	sf::Vector2i m_prevStart;
 	sf::Vector2i m_prevGoal;
 	bool m_rightClickState;
@@ -31,6 +32,7 @@ private:
 	void update(sf::Time t_deltaTime);
 	void render();
 	void leftClick();
+	void middleClick();
 	void rightClick(sf::Event t_event);
 	void setupSprite();
 

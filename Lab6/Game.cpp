@@ -8,7 +8,8 @@ Game::Game() :
 	m_rightClickState(false),
 	m_prevStart(-1,-1),
 	m_prevGoal(-1,-1),
-	m_isLeftMouseHeld(false)
+	m_isLeftMouseHeld(false),
+	m_isMiddleMouseHeld(false)
 {
 	m_window.setVerticalSyncEnabled(1);
 	setupSprite(); // load texture
@@ -68,6 +69,10 @@ void Game::processEvents()
 			{
 				m_isLeftMouseHeld = true;
 			}
+			else if (sf::Mouse::Middle == newEvent.mouseButton.button)
+			{
+				m_isMiddleMouseHeld = true;
+			}
 			if (sf::Mouse::Right == newEvent.mouseButton.button)
 			{
 				rightClick(newEvent);
@@ -78,6 +83,10 @@ void Game::processEvents()
 			if (sf::Mouse::Left == newEvent.mouseButton.button)
 			{
 				m_isLeftMouseHeld = false;
+			}
+			else if (sf::Mouse::Middle == newEvent.mouseButton.button)
+			{
+				m_isMiddleMouseHeld = false;
 			}
 		}
 	}
@@ -97,6 +106,9 @@ void Game::update(sf::Time t_deltaTime)
 	}
 	if (m_isLeftMouseHeld == true) {
 		leftClick();
+	}
+	else if (m_isMiddleMouseHeld == true) {
+		middleClick();
 	}
 	// if colour of tile is white -> not traversable
 }
@@ -119,7 +131,21 @@ void Game::leftClick()
 	for (int i = 0; i < COLUMNS; i++) {
 		for (int j = 0; j < ROWS; j++) {
 			if (sqrt(pow((m_grid[i][j].getPosition().x + m_cellSize.x / 2) - sf::Mouse::getPosition(m_window).x, 2) + pow((m_grid[i][j].getPosition().y + m_cellSize.y / 2) - sf::Mouse::getPosition(m_window).y, 2)) < m_cellSize.x / 1.75) {
-				m_grid[i][j].setFillColor(sf::Color(255, 255, 255, 255));
+				if (m_grid[i][j].getFillColor() == sf::Color(0, 0, 0, 0)) {
+					m_grid[i][j].setFillColor(sf::Color(255, 255, 255, 255));
+				}
+			}
+		}
+	}
+}
+void Game::middleClick()
+{
+	for (int i = 0; i < COLUMNS; i++) {
+		for (int j = 0; j < ROWS; j++) {
+			if (sqrt(pow((m_grid[i][j].getPosition().x + m_cellSize.x / 2) - sf::Mouse::getPosition(m_window).x, 2) + pow((m_grid[i][j].getPosition().y + m_cellSize.y / 2) - sf::Mouse::getPosition(m_window).y, 2)) < m_cellSize.x ) {
+				if (m_grid[i][j].getFillColor() == sf::Color(255, 255, 255, 255)) {
+					m_grid[i][j].setFillColor(sf::Color(0, 0, 0, 0));
+				}
 			}
 		}
 	}
@@ -130,7 +156,9 @@ void Game::rightClick(sf::Event t_event)
 		for (int j = 0; j < ROWS; j++) {
 			if (sqrt(pow((m_grid[i][j].getPosition().x + m_cellSize.x / 2) - t_event.mouseButton.x, 2) + pow((m_grid[i][j].getPosition().y + m_cellSize.y / 2) - t_event.mouseButton.y, 2)) < m_cellSize.x / 1.75) {
 				if (m_rightClickState == false) {
-					m_grid[i][j].setFillColor(sf::Color::Green);
+					if (m_grid[i][j].getFillColor() != sf::Color::Red) {
+						m_grid[i][j].setFillColor(sf::Color::Green);
+					}
 					m_rightClickState = true;
 					if (m_prevStart != sf::Vector2i{ -1,-1 }) {
 						m_grid[m_prevStart.x][m_prevStart.y].setFillColor(sf::Color(0, 0, 0, 0));
@@ -138,7 +166,9 @@ void Game::rightClick(sf::Event t_event)
 					m_prevStart = sf::Vector2i{ i,j };
 				}
 				else if (m_rightClickState == true) {
-					m_grid[i][j].setFillColor(sf::Color::Red);
+					if (m_grid[i][j].getFillColor() != sf::Color::Green) {
+						m_grid[i][j].setFillColor(sf::Color::Red);
+					}					
 					m_rightClickState = false;
 					if (m_prevGoal != sf::Vector2i{ -1,-1 }) {
 						m_grid[m_prevGoal.x][m_prevGoal.y].setFillColor(sf::Color(0, 0, 0, 0));
