@@ -17,6 +17,7 @@ public:
 	void run();
 
 private:
+	sf::Font m_ArialBlackfont; 
 	bool m_isLeftMouseHeld;
 	bool m_isMiddleMouseHeld;
 	sf::Vector2i m_prevStart;
@@ -24,9 +25,11 @@ private:
 	bool m_rightClickState;
 	sf::Vector2f m_cellSize;
 	sf::Vector2f m_goal;
-	const static int COLUMNS = 50;
-	const static int ROWS = 50;
+	const static int COLUMNS = 25;
+	const static int ROWS = 25;
+	int m_graph[COLUMNS][ROWS];
 	sf::RectangleShape m_grid[COLUMNS][ROWS];
+	sf::Text m_numbers[COLUMNS][ROWS];
 	void processEvents();
 	void processKeys(sf::Event t_event);
 	void update(sf::Time t_deltaTime);
@@ -35,6 +38,7 @@ private:
 	void middleClick();
 	void rightClick(sf::Event t_event);
 	void setupSprite();
+	void generateDijkstra(int t_graph[COLUMNS][ROWS], int src);
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Texture m_logoTexture; // texture used for sfml logo
