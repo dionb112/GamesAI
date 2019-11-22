@@ -4,6 +4,9 @@
 #ifndef GAME_HPP
 #define GAME_HPP
 #include <SFML/Graphics.hpp>
+#include "Graph.h"
+#include <queue>
+
 static const unsigned int SCR_W = sf::VideoMode::getDesktopMode().width;
 static const unsigned int SCR_H = sf::VideoMode::getDesktopMode().height;
 class Game
@@ -17,6 +20,7 @@ public:
 	void run();
 
 private:
+	Graph g;
 	sf::Font m_ArialBlackfont; 
 	bool m_isLeftMouseHeld;
 	bool m_isMiddleMouseHeld;
@@ -25,9 +29,9 @@ private:
 	bool m_rightClickState;
 	sf::Vector2f m_cellSize;
 	sf::Vector2f m_goal;
-	const static int COLUMNS = 25;
-	const static int ROWS = 25;
-	int m_graph[COLUMNS][ROWS];
+	const static int COLUMNS = 30;
+	const static int ROWS = 30;
+	// int m_graph[COLUMNS][ROWS];
 	sf::RectangleShape m_grid[COLUMNS][ROWS];
 	sf::Text m_numbers[COLUMNS][ROWS];
 	void processEvents();
@@ -38,7 +42,7 @@ private:
 	void middleClick();
 	void rightClick(sf::Event t_event);
 	void setupSprite();
-	void generateDijkstra(int t_graph[COLUMNS][ROWS], int src);
+	int* generateDijkstra(int t_graph[COLUMNS][ROWS], int src);
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Texture m_logoTexture; // texture used for sfml logo

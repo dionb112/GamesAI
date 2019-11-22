@@ -1,0 +1,3 @@
+Left click can be dragged or clicked to create obstacles
+Middle mouse can similarly be used to remove obstacles
+Right click can be used to create the start and the goal alternating between each
