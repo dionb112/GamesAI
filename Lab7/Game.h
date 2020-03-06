@@ -1,27 +1,29 @@
-/// <summary>
-/// author Pete Lowe May 2019
-/// you need to change the above line or lose marks
-/// </summary>
-#ifndef GAME_HPP
+#ifndef GAME_HPP // include guards
 #define GAME_HPP
-/// <summary>
-/// include guards used so we don't process this file twice
-/// same as #pragma once
-/// Don't forget the endif at the bottom
-/// </summary>
+
 #include <SFML/Graphics.hpp>
+#include "FuzzyLogic.h"
 
 class Game
 {
 public:
 	Game();
 	~Game();
-	/// <summary>
-	/// main method for game
-	/// </summary>
 	void run();
 
 private:
+	// threat size
+	float m_tiny;
+	float m_small;
+	float m_moderate;
+	float m_large;
+	// threat distance
+	float m_close;
+	float m_medium; // and assessment
+	float m_far;
+	// threat assesment
+	float m_low;
+	float m_high;
 
 	void processEvents();
 	void processKeys(sf::Event t_event);
@@ -37,8 +39,6 @@ private:
 	sf::Texture m_logoTexture; // texture used for sfml logo
 	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
-
 };
 
 #endif // !GAME_HPP
-
