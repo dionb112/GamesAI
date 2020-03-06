@@ -17,25 +17,19 @@
 /// load and setup thne image
 /// </summary>
 Game::Game() :
-	m_window{ sf::VideoMode{ 1000U, 1000U, 32U }, "AI-Lab6" },
-	m_exitGame{ false } //when true game will exit
+	m_window{ sf::VideoMode{ 800U, 600U, 32U }, "SFML Game" },
+	m_exitGame{false} //when true game will exit
 {
-
-	setupMap(); // load font 
-	setupWorkers(); // load texture
-
-	m_player = new player(sf::Vector2f(600, 500));
-	m_alienNest = new AlienNest(*m_player);
+	setupFontAndText(); // load font 
+	setupSprite(); // load texture
 }
 
 /// <summary>
 /// default destructor we didn't dynamically allocate anything
-/// 
 /// so we don't need to free it, but mthod needs to be here
 /// </summary>
 Game::~Game()
 {
-
 }
 
 
@@ -47,7 +41,7 @@ Game::~Game()
 /// if updates run slow then don't render frames
 /// </summary>
 void Game::run()
-{
+{	
 	sf::Clock clock;
 	sf::Time timeSinceLastUpdate = sf::Time::Zero;
 	const float fps{ 60.0f };
@@ -75,7 +69,7 @@ void Game::processEvents()
 	sf::Event newEvent;
 	while (m_window.pollEvent(newEvent))
 	{
-		if (sf::Event::Closed == newEvent.type) // window message
+		if ( sf::Event::Closed == newEvent.type) // window message
 		{
 			m_exitGame = true;
 		}
@@ -109,35 +103,6 @@ void Game::update(sf::Time t_deltaTime)
 	{
 		m_window.close();
 	}
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
-	{
-		// fire a bullet
-		m_bullets.push_back(new bullet(m_player->playerPosition(), m_player->playerRadian()));
-	}
-
-	for (int i = 0; i < m_bullets.size(); i++) {
-		m_bullets[i]->update(t_deltaTime.asSeconds());
-
-		if (!m_bullets[i]->checkAlive()) {
-			m_bullets.erase(m_bullets.begin() + i);
-		}
-	}
-
-	m_player->update(t_deltaTime.asSeconds());
-
-	for (int i = 0; i < m_workers.size(); i++) {
-		m_workers[i]->update(t_deltaTime.asSeconds());
-		if (m_workers[i]->catchCheck(m_player->playerPosition())) {
-			m_player->saveWorker();
-			m_workers.erase(m_workers.begin() + i);
-		}
-	}
-
-	/*if (m_room->isPlayerInRoom(m_player->playerSize(), m_player->playerPosition())) {
-		m_player->buttonCheck();
-	}*/
-
 }
 
 /// <summary>
@@ -145,46 +110,42 @@ void Game::update(sf::Time t_deltaTime)
 /// </summary>
 void Game::render()
 {
-	m_window.clear(sf::Color::Black);
-
-	for (int i = 0; i < m_rooms.size(); i++) {
-		m_rooms[i]->render(m_window);
-	}
-
-	for (int i = 0; i < m_bullets.size(); i++) {
-		m_bullets[i]->render(m_window);
-
-	}
-
-	for (int i = 0; i < m_workers.size(); i++) {
-		m_workers[i]->render(m_window);
-	}
-
-	m_player->render(m_window);
-
+	m_window.clear(sf::Color::White);
+	m_window.draw(m_welcomeMessage);
+	m_window.draw(m_logoSprite);
 	m_window.display();
 }
 
 /// <summary>
 /// load the font and setup the text message for screen
 /// </summary>
-void Game::setupMap()
+void Game::setupFontAndText()
 {
-	m_room = new room(sf::Vector2f(600, 600), sf::Vector2f(500, 500)); // size and position
-	m_rooms.push_back(m_room);
+	if (!m_ArialBlackfont.loadFromFile("ASSETS\\FONTS\\ariblk.ttf"))
+	{
+		std::cout << "problem loading arial black font" << std::endl;
+	}
+	m_welcomeMessage.setFont(m_ArialBlackfont);
+	m_welcomeMessage.setString("SFML Game");
+	m_welcomeMessage.setStyle(sf::Text::Underlined | sf::Text::Italic | sf::Text::Bold);
+	m_welcomeMessage.setPosition(40.0f, 40.0f);
+	m_welcomeMessage.setCharacterSize(80U);
+	m_welcomeMessage.setOutlineColor(sf::Color::Red);
+	m_welcomeMessage.setFillColor(sf::Color::Black);
+	m_welcomeMessage.setOutlineThickness(3.0f);
 
-	m_room = new room(sf::Vector2f(200, 400), sf::Vector2f(500, 0)); // size and position
-	m_rooms.push_back(m_room);
-
-	m_room = new room(sf::Vector2f(1000, 1000), sf::Vector2f(500, -700)); // size and position
-	m_rooms.push_back(m_room);
 }
 
 /// <summary>
 /// load the texture and setup the sprite for the logo
 /// </summary>
-void Game::setupWorkers()
+void Game::setupSprite()
 {
-	m_worker = new worker(sf::Vector2f(300, 300));
-	m_workers.push_back(m_worker);
+	if (!m_logoTexture.loadFromFile("ASSETS\\IMAGES\\SFML-LOGO.png"))
+	{
+		// simple error message if previous call fails
+		std::cout << "problem loading logo" << std::endl;
+	}
+	m_logoSprite.setTexture(m_logoTexture);
+	m_logoSprite.setPosition(300.0f, 180.0f);
 }

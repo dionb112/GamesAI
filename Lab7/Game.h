@@ -1,4 +1,3 @@
-#pragma once
 /// <summary>
 /// author Pete Lowe May 2019
 /// you need to change the above line or lose marks
@@ -11,13 +10,6 @@
 /// Don't forget the endif at the bottom
 /// </summary>
 #include <SFML/Graphics.hpp>
-#include <iostream>
-
-#include "AlienNest.h"
-#include "Player.h"
-#include "Room.h"
-#include "Worker.h"
-#include "Bullet.h"
 
 class Game
 {
@@ -35,21 +27,15 @@ private:
 	void processKeys(sf::Event t_event);
 	void update(sf::Time t_deltaTime);
 	void render();
-
-	void setupMap();
-	void setupWorkers();
+	
+	void setupFontAndText();
+	void setupSprite();
 
 	sf::RenderWindow m_window; // main SFML window
-
-	AlienNest* m_alienNest;
-	player* m_player;
-	room* m_room;
-	worker* m_worker;
-
-	vector<worker*> m_workers; 
-	vector<bullet*> m_bullets;
-	vector<room*> m_rooms;
-
+	sf::Font m_ArialBlackfont; // font used by message
+	sf::Text m_welcomeMessage; // text used for message on screen
+	sf::Texture m_logoTexture; // texture used for sfml logo
+	sf::Sprite m_logoSprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
 
 };

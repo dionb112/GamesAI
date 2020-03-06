@@ -1,4 +1,3 @@
-#pragma once
 /// <summary>
 /// simple game loop for SFML[2.5.1]
 /// 
