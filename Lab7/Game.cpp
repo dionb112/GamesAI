@@ -38,6 +38,9 @@ Game::Game() :
 	std::cout << m_low << std::endl;
 	std::cout << m_medium << std::endl;
 	std::cout << m_high << std::endl;
+
+	// Defuzzify
+	float deploy = (m_low * 10 + m_medium * 30 + m_high * 50) / (m_low + m_medium + m_high);
 }
 
 
@@ -105,8 +108,8 @@ void Game::update(sf::Time t_deltaTime) // dt is time interval per frame
 void Game::render()
 {
 	m_window.clear(sf::Color::Black);
-	m_window.draw(m_welcomeMessage);
-	m_window.draw(m_logoSprite);
+	m_window.draw(m_text);
+	m_window.draw(m_sprite);
 	m_window.display();
 }
 
@@ -117,23 +120,23 @@ void Game::setupFontAndText()
 	{
 		std::cout << "problem loading arial black font" << std::endl;
 	}
-	m_welcomeMessage.setFont(m_ArialBlackfont);
-	m_welcomeMessage.setString("AI force fight");
-	m_welcomeMessage.setStyle(sf::Text::Underlined | sf::Text::Italic | sf::Text::Bold);
-	m_welcomeMessage.setPosition(90.0f, 40.0f);
-	m_welcomeMessage.setCharacterSize(42U);
-	m_welcomeMessage.setOutlineColor(sf::Color::Red);
-	m_welcomeMessage.setFillColor(sf::Color::Black);
-	m_welcomeMessage.setOutlineThickness(3.0f);
+	m_text.setFont(m_ArialBlackfont);
+	m_text.setString("AI force fight");
+	m_text.setStyle(sf::Text::Underlined | sf::Text::Italic | sf::Text::Bold);
+	m_text.setPosition(90.0f, 40.0f);
+	m_text.setCharacterSize(42U);
+	m_text.setOutlineColor(sf::Color::Red);
+	m_text.setFillColor(sf::Color::Black);
+	m_text.setOutlineThickness(3.0f);
 
 }
 
 
 void Game::setupSprite()
 {
-	if (!m_logoTexture.loadFromFile("ASSETS\\IMAGES\\fuzzy.png"))
+	if (!m_texture.loadFromFile("ASSETS\\IMAGES\\fuzzy.png"))
 	{
 		std::cout << "problem loading logo" << std::endl;
 	}
-	m_logoSprite.setTexture(m_logoTexture);
+	m_sprite.setTexture(m_texture);
 }

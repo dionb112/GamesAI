@@ -35,9 +35,9 @@ private:
 
 	sf::RenderWindow m_window; // main SFML window
 	sf::Font m_ArialBlackfont; // font used by message
-	sf::Text m_welcomeMessage; // text used for message on screen
-	sf::Texture m_logoTexture; // texture used for sfml logo
-	sf::Sprite m_logoSprite; // sprite used for sfml logo
+	sf::Text m_text; // text used for message on screen
+	sf::Texture m_texture; // texture used for sfml logo
+	sf::Sprite m_sprite; // sprite used for sfml logo
 	bool m_exitGame; // control exiting game
 };
 
